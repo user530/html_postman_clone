@@ -7,6 +7,8 @@ const form = document.querySelector('[data-form]');
 const queryParamsContainer = document.querySelector('[data-query-params]');
 const requestHeadersContainer = document.querySelector('[data-request-headers]');
 const keyValueTemplate = document.querySelector('[data-key-value-template]');
+const responseHeadersContainer = document.querySelector('[data-response-headers]');
+const responseBodyContainer = document.querySelector('[data-json-response-body]');
 
 // Create new query param slot
 document
@@ -29,15 +31,26 @@ requestHeadersContainer.append(createKeyValuePair());
 form.addEventListener('submit', (e) => {
     e.preventDefault();
 
+    // Fetch data
     axios({
         method: document.querySelector('[data-method]')?.value,
         url: document.querySelector('[data-url]')?.value,
         params: keyValuePairsToObject(queryParamsContainer),
         headers: keyValuePairsToObject(requestHeadersContainer),
     })
-    .then(
-        response => console.log(response)
-    )
+    // Pass error response as it comes
+    .catch(err => err)
+    // Handle response
+    .then((response) => {
+        // Make response section visible
+        const section = document.querySelector('[data-response-section]');
+        section.classList.remove('d-none');
+        
+        // Visualize response data
+        updateResponseDetails(response);
+        updateResponseBody(response.data);
+        updateResponseHeaders(response.headers);
+    })
 })
 
 
@@ -56,6 +69,7 @@ function createKeyValuePair() {
     return element;
 }
 
+// Create an object from the container of key-val pairs
 function keyValuePairsToObject(container) {
     const pairs = container.querySelectorAll('[data-key-value-pair]');
     return [...pairs].reduce(
@@ -68,4 +82,32 @@ function keyValuePairsToObject(container) {
             return {...data, [key]: value}
         }
     ,{})
+}
+
+// 
+function updateResponseDetails(response) {
+    console.log(response);
+    const {status} = response;
+    const resStatusEl = document.querySelector('[data-status]');
+    const resTimeEl = document.querySelector('[data-time]');
+    const resSizeEl = document.querySelector('[data-size]');
+
+    resStatusEl.textContent = response.status;
+}
+
+function updateResponseBody(responseData) {
+    console.log(responseData);
+}
+
+function updateResponseHeaders(responseHeaders) {
+    Object.entries(responseHeaders)
+    .forEach(([key, val]) => {
+        const keyElement = document.createElement('div');
+        keyElement.textContent = key;
+
+        const valElement = document.createElement('div');
+        valElement.textContent = val;
+
+        responseHeadersContainer.append(keyElement, valElement);
+    })
 }
