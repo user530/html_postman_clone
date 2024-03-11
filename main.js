@@ -2,6 +2,7 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import prettyBytes from 'pretty-bytes';
+import setupEditors from './editorSetup';
 
 // Select UI elements
 const form = document.querySelector('[data-form]');
@@ -9,14 +10,13 @@ const queryParamsContainer = document.querySelector('[data-query-params]');
 const requestHeadersContainer = document.querySelector('[data-request-headers]');
 const keyValueTemplate = document.querySelector('[data-key-value-template]');
 const responseHeadersContainer = document.querySelector('[data-response-headers]');
-const responseBodyContainer = document.querySelector('[data-json-response-body]');
 
 // Set some overhead data to calculate request time
 axios.interceptors.request.use(
     request => {
         request.customData = request.customData || {};
         request.customData.startTime = new Date().getTime();
-
+        
         return request;
     }
 )
@@ -46,9 +46,18 @@ document.querySelector('[data-add-request-header-btn]')
 queryParamsContainer.append(createKeyValuePair());
 requestHeadersContainer.append(createKeyValuePair());
 
+// Destructure code editor data
+const { reqEditor, updateResEditor } = setupEditors();
+
 // Set up form functionality
 form.addEventListener('submit', (e) => {
     e.preventDefault();
+
+    // Request JSON
+    const reqBody = getReqJson(reqEditor);
+
+    // Catch JSON error
+    if(reqBody === undefined) return;
 
     // Fetch data
     axios({
@@ -56,6 +65,7 @@ form.addEventListener('submit', (e) => {
         url: document.querySelector('[data-url]')?.value,
         params: keyValuePairsToObject(queryParamsContainer),
         headers: keyValuePairsToObject(requestHeadersContainer),
+        data: reqBody,
     })
     // Pass error response as it comes
     .catch(err => err)
@@ -118,10 +128,12 @@ function updateResponseDetails(response) {
     );
 }
 
+// Visualize response body
 function updateResponseBody(responseData) {
-    console.log(responseData);
+    updateResEditor(responseData);
 }
 
+// Visualize response headers into lines
 function updateResponseHeaders(responseHeaders) {
     Object.entries(responseHeaders)
     .forEach(([key, val]) => {
@@ -144,4 +156,17 @@ function calculateResTime(response) {
     response.customData.time = new Date().getTime() - startTime;
 
     return response;
+}
+
+// Get JSON data from the codemirror editor
+function getReqJson(editor) {
+    try {
+        const {state: { doc }} = editor; 
+        const editorData = JSON.parse(doc.toString() || null);
+
+        return editorData;
+    } catch (error) {
+        alert('Can\'t parse request body! Check your JSON form!');
+        return undefined;
+    }
 }

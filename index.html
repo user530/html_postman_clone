@@ -4,138 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="main.js" type="module" defer></script>
-    <title>Redis Cache Tester</title>
+    <title>API Tester</title>
 </head>
 <body>
-    <div class="p-4">
-        <form data-form>
-            <div class="input-group mb-4">
-                <select class="form-select flex-grow-0 w-auto" data-method>
-                    <option value="GET" selected>GET</option>
-                    <option value="POST">POST</option>
-                    <option value="PUT">PUT</option>
-                    <option value="PATCH">PATCH</option>
-                    <option value="DELETE">DELETE</option>
-                </select>
+    <main style="width: min(100%, 700px);" class="mx-auto py-4">
+        <h1 class="text-center">Postman at home</h1>
+        <div class="p-4">
+            <form data-form>
+                <h3>Request:</h3>
+                <div class="input-group mb-4">
+                    <select class="form-select flex-grow-0 w-auto" data-method>
+                        <option value="GET" selected>GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
 
-                <input type="url" required class="form-control" placeholder="https://example.com" data-url>
-                <button type="submit" class="btn btn-primary">SEND</button>
-            </div>
-
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button 
-                    class="nav-link active" 
-                    id="query-params-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#query-params"
-                    type="button"
-                    role="tab"
-                    aria-controls="query-params"
-                    aria-selected="true"
-                    >Query Params</button>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <button 
-                    class="nav-link" 
-                    id="request-headers-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#request-headers"
-                    type="button"
-                    role="tab"
-                    aria-controls="request-headers"
-                    aria-selected="false"
-                    >Headers</button>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <button 
-                    class="nav-link" 
-                    id="json-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#json"
-                    type="button"
-                    role="tab"
-                    aria-controls="json"
-                    aria-selected="false"
-                    >JSON</button>
-                </li>
-            </ul>
-
-            <div class="tab-content p-3 border-top-0 border">
-                <div class="tab-pane fade show active" id="query-params" role="tabpanel" aria-labelledby="query-params-tab">
-                    <div data-query-params></div>
-                    <button data-add-query-param-btn class="mt-2 btn btn-outline-success" type="button">Add</button>
+                    <input type="url" required class="form-control" placeholder="https://example.com" data-url>
+                    <button type="submit" class="btn btn-primary">SEND</button>
                 </div>
 
-                <div class="tab-pane fade" id="request-headers" role="tabpanel" aria-labelledby="request-headers-tab">
-                    <div data-request-headers></div>
-                    <button data-add-request-header-btn class="mt-2 btn btn-outline-success" type="button">Add</button>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button 
+                        class="nav-link active" 
+                        id="query-params-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#query-params"
+                        type="button"
+                        role="tab"
+                        aria-controls="query-params"
+                        aria-selected="true"
+                        >Query Params</button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button 
+                        class="nav-link" 
+                        id="request-headers-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#request-headers"
+                        type="button"
+                        role="tab"
+                        aria-controls="request-headers"
+                        aria-selected="false"
+                        >Headers</button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button 
+                        class="nav-link" 
+                        id="json-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#json"
+                        type="button"
+                        role="tab"
+                        aria-controls="json"
+                        aria-selected="false"
+                        >JSON</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content p-3 border-top-0 border">
+                    <div class="tab-pane fade show active" id="query-params" role="tabpanel" aria-labelledby="query-params-tab">
+                        <div data-query-params></div>
+                        <button data-add-query-param-btn class="mt-2 btn btn-outline-success" type="button">Add</button>
+                    </div>
+
+                    <div class="tab-pane fade" id="request-headers" role="tabpanel" aria-labelledby="request-headers-tab">
+                        <div data-request-headers></div>
+                        <button data-add-request-header-btn class="mt-2 btn btn-outline-success" type="button">Add</button>
+                    </div>
+
+                    <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
+                        <div data-json-request-body class="overflow-auto" style="max-height: 200px;"></div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="mt-5 d-none" data-response-section>
+                <h3>Response:</h3>
+                <div class="d-flex my-2">
+                    <div class="me-3">
+                        Status: <span data-status></span>
+                    </div>
+
+                    <div class="me-3">
+                        Time: <span data-time></span>ms
+                    </div>
+
+                    <div class="me-3">
+                        Size: <span data-size></span>
+                    </div>
                 </div>
 
-                <div class="tab-pane fade" id="json" role="tabpanel" aria-labelledby="json-tab">
-                    <div data-json-request-body class="overflow-auto" style="max-height: 200px;"></div>
-                </div>
-            </div>
-        </form>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button 
+                        class="nav-link active" 
+                        id="response-body-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#response-body"
+                        type="button"
+                        role="tab"
+                        aria-controls="response-body"
+                        aria-selected="true"
+                        >Body</button>
+                    </li>
 
-        <div class="mt-5 d-none" data-response-section>
-            <h3>Response</h3>
-            <div class="d-flex my-2">
-                <div class="me-3">
-                    Status: <span data-status></span>
-                </div>
+                    <li class="nav-item" role="presentation">
+                        <button 
+                        class="nav-link" 
+                        id="response-headers-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#response-headers"
+                        type="button"
+                        role="tab"
+                        aria-controls="response-headers"
+                        aria-selected="false"
+                        >Headers</button>
+                    </li>
+                </ul>
 
-                <div class="me-3">
-                    Time: <span data-time></span>ms
-                </div>
+                <div class="tab-content p-3 border-top-0 border">
+                    <div class="tab-pane fade show active" id="response-body" role="tabpanel" aria-labelledby="response-body-tab">
+                        <div class="overflow-auto" style="max-height: 200px;" data-json-response-body></div>
+                        
+                    </div>
 
-                <div class="me-3">
-                    Size: <span data-size></span>
-                </div>
-            </div>
-
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button 
-                    class="nav-link active" 
-                    id="response-body-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#response-body"
-                    type="button"
-                    role="tab"
-                    aria-controls="response-body"
-                    aria-selected="true"
-                    >Body</button>
-                </li>
-
-                <li class="nav-item" role="presentation">
-                    <button 
-                    class="nav-link" 
-                    id="response-headers-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#response-headers"
-                    type="button"
-                    role="tab"
-                    aria-controls="response-headers"
-                    aria-selected="false"
-                    >Headers</button>
-                </li>
-            </ul>
-
-            <div class="tab-content p-3 border-top-0 border">
-                <div class="tab-pane fade show active" id="response-body" role="tabpanel" aria-labelledby="response-body-tab">
-                    <div class="overflow-auto" style="max-height: 200px;" data-json-response-body></div>
-                    
-                </div>
-
-                <div class="tab-pane fade" id="response-headers" role="tabpanel" aria-labelledby="response-headers-tab">
-                    <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 2rem;" data-response-headers></div>
+                    <div class="tab-pane fade" id="response-headers" role="tabpanel" aria-labelledby="response-headers-tab">
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 2rem;" data-response-headers></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+    
 
     <template data-key-value-template>
         <div class="input-group my-2" data-key-value-pair>
