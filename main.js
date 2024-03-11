@@ -10,6 +10,24 @@ const keyValueTemplate = document.querySelector('[data-key-value-template]');
 const responseHeadersContainer = document.querySelector('[data-response-headers]');
 const responseBodyContainer = document.querySelector('[data-json-response-body]');
 
+// Set some overhead data to calculate request time
+axios.interceptors.request.use(
+    request => {
+        request.customData = request.customData || {};
+        request.customData.startTime = new Date().getTime();
+
+        return request;
+    }
+)
+
+// Set up response time
+axios.interceptors.response.use(
+    calculateResTime,
+    (err) => {
+        return Promise.reject(calculateResTime(err.response));
+    } 
+)
+
 // Create new query param slot
 document
 .querySelector('[data-add-query-param-btn]')
@@ -84,15 +102,15 @@ function keyValuePairsToObject(container) {
     ,{})
 }
 
-// 
+// Visualize response meta data
 function updateResponseDetails(response) {
-    console.log(response);
-    const {status} = response;
+    const {status, customData: {time}} = response;
     const resStatusEl = document.querySelector('[data-status]');
     const resTimeEl = document.querySelector('[data-time]');
     const resSizeEl = document.querySelector('[data-size]');
 
-    resStatusEl.textContent = response.status;
+    resStatusEl.textContent = status;
+    resTimeEl.textContent = time;
 }
 
 function updateResponseBody(responseData) {
@@ -110,4 +128,15 @@ function updateResponseHeaders(responseHeaders) {
 
         responseHeadersContainer.append(keyElement, valElement);
     })
+}
+
+// Calculate the time of the response
+function calculateResTime(response) {
+    response.customData = response.customData || {};
+
+    const {customData: {startTime}} = response.config;
+    
+    response.customData.time = new Date().getTime() - startTime;
+
+    return response;
 }
