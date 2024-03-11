@@ -1,6 +1,7 @@
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import prettyBytes from 'pretty-bytes';
 
 // Select UI elements
 const form = document.querySelector('[data-form]');
@@ -111,6 +112,10 @@ function updateResponseDetails(response) {
 
     resStatusEl.textContent = status;
     resTimeEl.textContent = time;
+    // length of the char is a byte, and we preatify the value using prettyBytes
+    resSizeEl.textContent = prettyBytes(
+        JSON.stringify(response.data).length + JSON.stringify(response.headers).length
+    );
 }
 
 function updateResponseBody(responseData) {
