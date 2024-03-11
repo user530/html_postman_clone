@@ -8,9 +8,9 @@
 </head>
 <body>
     <div class="p-4">
-        <form action="">
+        <form data-form>
             <div class="input-group mb-4">
-                <select name="" id="" class="form-select flex-grow-0 w-auto">
+                <select name="" id="" class="form-select flex-grow-0 w-auto" data-method>
                     <option value="GET" selected>GET</option>
                     <option value="POST">POST</option>
                     <option value="PUT">PUT</option>
@@ -18,7 +18,7 @@
                     <option value="DELETE">DELETE</option>
                 </select>
 
-                <input type="url" required class="form-control" placeholder="https://example.com">
+                <input type="url" required class="form-control" placeholder="https://example.com" data-url>
                 <button type="submit" class="btn btn-primary">SEND</button>
             </div>
 
