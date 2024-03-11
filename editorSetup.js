@@ -1,19 +1,21 @@
-import { EditorState, basicSetup } from '@codemirror/basic-setup';
+import { basicSetup } from 'codemirror';
+import { EditorState } from '@codemirror/state';
 import { EditorView, keymap } from '@codemirror/view';
-import { defaultTabBinding } from '@codemirror/commands';
+import { defaultKeymap, indentWithTab } from '@codemirror/commands';
 import { json } from '@codemirror/lang-json';
 
 export default function setupEditors(){
     // Editor parent elements
-    const jsonReqBody = document.querySelector('data-json-request-body');
-    const jsonResBody = document.querySelector('data-json-response-body');
+    const jsonReqBody = document.querySelector('[data-json-request-body]');
+    const jsonResBody = document.querySelector('[data-json-response-body]');
 
     // Basic editor extensions
     const basicExtensions = [
         basicSetup,
-        keymap.of([defaultTabBinding]),
+        keymap.of([defaultKeymap, indentWithTab]),
         json(),
-        EditorState.tabSize(2),
+        EditorState.tabSize.of(2),
+        // EditorState.tabSize(2),
     ]
     
     // Request editor initialization
